@@ -8,12 +8,12 @@ def find_sum_combs(inputs, total=2020, n=2):
             return comb
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     d = get_data(day=1, year=2020)
-    inputs = [int(line) for line in d.split('\n')]
+    inputs = [int(line) for line in d.split("\n")]
 
     x, y = find_sum_combs(inputs)
-    submit(x*y, part='a', day=1, year=2020)
+    submit(x * y, part="a", day=1, year=2020)
 
     x, y, z = find_sum_combs(inputs, n=3)
-    submit(x*y*z, part='b', day=1, year=2020)
+    submit(x * y * z, part="b", day=1, year=2020)
