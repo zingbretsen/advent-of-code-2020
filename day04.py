@@ -1,5 +1,3 @@
-# a: 237
-# b: 172
 import re
 
 from aocd import get_data, submit
