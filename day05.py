@@ -8,12 +8,9 @@ def parse_line(line):
 
 
 def find_seat(seats):
-    seats = sorted(seats)
-    prev_seat = seats[0]
-    for seat in seats[1:]:
-        if seat - 1 != prev_seat:
-            return seat - 1
-        prev_seat = seat
+    seats = set(seats)
+    all_seats = set(range(min(seats), max(seats)))
+    return (all_seats - seats).pop()
 
 
 if __name__ == "__main__":
