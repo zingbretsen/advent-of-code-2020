@@ -3,15 +3,12 @@ from aocd import get_data, submit
 
 
 def parse_lines(lines):
-    lines = lines.split("\n")
-    n_lines = len(lines)
+    n_passengers = lines.count("\n") + 1
+    lines = lines.replace("\n", "")
 
-    char_counter = Counter()
-    for line in lines:
-        char_counter.update(line)
+    char_counter = Counter(lines)
 
-    char_counter = {k: v / n_lines for k, v in char_counter.items()}
-    return char_counter
+    return {k: v / n_passengers for k, v in char_counter.items()}
 
 
 if __name__ == "__main__":
