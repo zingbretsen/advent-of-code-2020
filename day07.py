@@ -6,8 +6,10 @@ from aocd import get_data, submit
 def parse_line(line, contained_dict, container_dict):
     if re.match(".*no other bags.*", line) is not None:
         return dict()
+
     container, bags = line.strip(".").split(" bags contain ")
     bags = bags.split(", ")
+
     for bag in bags:
         matches = re.match("([0-9]+) (.+) bags?", bag)
         count = int(matches.group(1))
@@ -29,7 +31,6 @@ def find_containers(contained_dict, starting_bag="shiny gold"):
 
 
 def count_contained(bags, starting_bag="shiny gold", n_bags=1):
-    print(starting_bag, n_bags)
     c = 0
     for bag in bags[starting_bag]:
         next_bag = bag["type"]
