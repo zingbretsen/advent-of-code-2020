@@ -45,7 +45,6 @@ if __name__ == "__main__":
 
     contained_dict = defaultdict(set)
     container_dict = defaultdict(list)
-    count_dict = defaultdict(int)
 
     for line in d.split("\n"):
         parse_line(line, contained_dict, container_dict)
