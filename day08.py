@@ -10,22 +10,22 @@ def parse_line(line):
 def find_acc(inputs):
     """Returns the value of the accumulator if input loops or exits"""
     acc = i = 0
+    length = len(inputs)
     visited = set()
+
     while True:
-        if i in visited:
-            return acc, i
         visited.add(i)
-        try:
-            instr, num = inputs[i]
-        except IndexError:
-            return acc, i
+
+        instr, num = inputs[i]
+        delta = 1
         if instr == "acc":
             acc += num
-            i += 1
         elif instr == "jmp":
-            i += num
-        else:
-            i += 1
+            delta = num
+
+        i += delta
+        if i in visited or i == length:
+            return acc, i
 
 
 def flip(inputs):
