@@ -4,11 +4,7 @@ from aocd import get_data, submit
 def parse_line(line):
     """Pulls out instructions and numbers"""
     instr, num = line.split()
-    sign = num[:1]
-    num = int(num[1:])
-    if sign == "-":
-        num *= -1
-    return instr, num
+    return instr, int(num)
 
 
 def find_acc(inputs):
