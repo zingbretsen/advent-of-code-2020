@@ -14,8 +14,11 @@ def find_diffs(inputs):
 def find_spans(diffs):
     diffs = [str(n) for n in diffs]
     s = [len(ones) for ones in "".join(diffs).split("3")]
-    mappings = {2: 2, 3: 4, 4: 7}
-    s = [mappings[x] for x in s if x > 1]
+
+    # These mappings turn out to be the Fibonacci sequence,
+    # but using the 3 previous values instead of the previous 2
+    mappings = {0: 1, 1: 1, 2: 2, 3: 4, 4: 7}
+    s = [mappings[x] for x in s]
     return s
 
 
