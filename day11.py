@@ -1,37 +1,18 @@
 import math
 from collections import defaultdict
 
+import numpy as np
+
 from aocd import get_data, submit
 
 
-def find_diffs(inputs):
-    inputs = sorted(inputs)
-    diffs = inputs[:1]
-    for x, y in zip(inputs[:-1], inputs[1:]):
-        diffs.append(y - x)
-    diffs.append(3)
-    return diffs
-
-
-def find_spans(diffs):
-    diffs = [str(n) for n in diffs]
-    s = [len(ones) for ones in "".join(diffs).split("3")]
-
-    # These mappings turn out to be the Fibonacci sequence,
-    # but using the 3 previous values instead of the previous 2
-    mappings = {0: 1, 1: 1, 2: 2, 3: 4, 4: 7}
-    s = [mappings[x] for x in s]
-    return s
-
-
 def find_seats(inputs):
-    seats = dict()
+    seat_locations = []
     for i, row in enumerate(inputs):
-        seats[i] = dict()
         for j, location in enumerate(row):
             if location == "L":
-                seats[i][j] = 0
-    return seats
+                seat_locations.append((i, j))
+    return seat_locations
 
 
 def get_seat_value(seats, row, col):
@@ -41,45 +22,84 @@ def get_seat_value(seats, row, col):
 def get_surrounding_seat_values(seats, row, col):
     values = []
     for i in [-1, 0, 1]:
+        i2 = row + i
         for j in [-1, 0, 1]:
-            if not (i == 0 and j == 0):
-                values.append(get_seat_value(seats, row + i, col + j))
+            j2 = col + j
+            if not (i == 0 and j == 0) and (0 <= i2) and (0 <= j2):
+                try:
+                    values.append(seats[i2, j2])
+                except indexerror:
+                    pass
+    return values
+
+
+def find_nearest_los_seat(seats, occupied_seats, i, j, dx, dy):
+    """Look in one direction for the nearest seat.
+
+    If you find a seat, return its occupancy status, otherwise return 0.
+    """
+    n_rows, n_cols = occupied_seats.shape
+    while True:
+        i += dx
+        j += dy
+        if i < 0 or j < 0 or i >= n_rows or j >= n_cols:
+            return 0
+        if (i, j) in seats:
+            return occupied_seats[i, j]
+
+
+def find_los_neighbors(seats, occupied_self, i, j):
+    """Finds total occupied seats in line of sight."""
+    values = []
+    for dx in [-1, 0, 1]:
+        for dy in [-1, 0, 1]:
+            if not (dx == 0 and dy == 0):
+                values.append(
+                    find_nearest_los_seat(seats, occupied_seats, i, j, dx, dy)
+                )
+    return values
+
+
+def get_line_of_sight_seats(seats, row, col):
+    values = []
+    for i in [-1, 0, 1]:
+        i2 = row + i
+        for j in [-1, 0, 1]:
+            j2 = col + j
+            if not (i == 0 and j == 0) and (0 <= i2) and (0 <= j2):
+                try:
+                    values.append(seats[i2, j2])
+                except indexerror:
+                    pass
     return values
 
 
 from copy import deepcopy
 
 
-def iterate(seats):
-    new_seats = seats.deepcopy()
-    for i in seats.keys():
-        for j in seats[i].keys():
-            print(
-                i,
-                j,
-                get_seat_value(seats, i, j),
-                get_surrounding_seat_values(seats, i, j),
-            )
-            if sum(get_surrounding_seat_values(seats, i, j)) == 0:
-                new_seats[i][j] = 1
+def iterate(seats, occupied_seats, part="a"):
+    if part == "a":
+        score = get_surrounding_seat_values
+        n_neighbors = 4
+    else:
+        score = find_los_neighbors
+        n_neighbors = 5
+
+    new_seats = occupied_seats.copy()
+    for i, j in seats:
+        if part == "a":
+            neighbors = sum(get_surrounding_seat_values(occupied_seats, i, j))
+        else:
+            neighbors = sum(find_los_neighbors(seats, occupied_seats, i, j))
+        if neighbors == 0:
+            new_seats[i, j] = 1
+        elif neighbors >= n_neighbors:
+            new_seats[i, j] = 0
     return new_seats
 
 
-def print_seats(seats, rows=10, cols=10):
-    print()
-    for i in range(rows):
-        vals = []
-        for j in range(cols):
-            seat = seats[i].get(j, None)
-            if seat in (0, 1):
-                vals.append(str(seat))
-            else:
-                vals.append(".")
-        print("".join(vals))
-
-
 if __name__ == "__main__":
-    # d = get_data()
+    d = get_data()
     d = """L.LL.LL.LL
 LLLLLLL.LL
 L.L.L..L..
@@ -93,13 +113,19 @@ L.LLLLL.LL"""
 
     inputs = [line for line in d.split("\n")]
     seats = find_seats(inputs)
-    print_seats(seats)
-    seats = iterate(seats)
-    print_seats(seats)
+    occupied_seats = np.zeros((len(inputs), len(inputs[0])), np.int32)
+    for i in range(200):
+        occupied_seats = iterate(seats, occupied_seats, part="a")
+        print(occupied_seats.sum())
 
-    answer_a = diffs.count(1) * diffs.count(3)
-    submit(answer_a, part="a", day=10, year=2020)
+    answer_a = 2251
+    submit(answer_a, part="a", day=11, year=2020)
 
-    s = find_spans(diffs)
-    answer_b = math.prod(s)
-    submit(answer_b, part="b", day=10, year=2020)
+    seats = find_seats(inputs)
+    occupied_seats = np.zeros((len(inputs), len(inputs[0])), np.int32)
+    for i in range(200):
+        occupied_seats = iterate(seats, occupied_seats, part="b")
+        print(occupied_seats.sum())
+
+    answer_b = occupied_seats.sum()
+    submit(answer_b, part="b", day=11, year=2020)
