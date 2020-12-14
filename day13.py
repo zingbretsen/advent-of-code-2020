@@ -49,10 +49,7 @@ if __name__ == "__main__":
     dep_time = dep_times[m]
 
     answer_a = bus_id * (dep_time - current_time)
-    print(answer_a)
     submit(answer_b, part="a", day=13, year=2020)
 
     answer_b = find_answer_b(time_table)
-    print(answer_b)
-
     submit(answer_b, part="b", day=13, year=2020)
