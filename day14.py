@@ -1,6 +1,4 @@
-import re
 from itertools import product
-from collections import defaultdict
 from aocd import get_data, submit
 
 
@@ -17,7 +15,7 @@ def mask_num(mask, num, bits=36):
 
 def find_a(lines):
     mask = None
-    mem = defaultdict(int)
+    mem = dict()
     for line in lines:
         instr, data = line.split(" = ")
         if instr == "mask":
@@ -54,7 +52,7 @@ def gen_addrs(mask, addr, bits=36):
 
 def find_b(lines):
     mask = None
-    mem = defaultdict(int)
+    mem = dict()
     for line in lines:
         instr, data = line.split(" = ")
         if instr == "mask":
@@ -69,6 +67,7 @@ def find_b(lines):
 if __name__ == "__main__":
     d = get_data()
     lines = [line for line in d.split("\n") if line]
+
     answer_a = find_a(lines)
     submit(answer_a, part="a", day=14, year=2020)
 
