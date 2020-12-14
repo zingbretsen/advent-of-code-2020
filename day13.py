@@ -21,6 +21,11 @@ def find_u(y, mod):
 
 
 def find_answer_b(time_table):
+    """Uses Chinese Remainder Theorem to find an N that satisfies given mods
+
+    Algorithm adapted from here:
+    https://www.dave4math.com/mathematics/chinese-remainder-theorem/
+    """
     bus_ids = [
         (i, int(time)) for i, time in enumerate(time_table.split(",")) if time != "x"
     ]
