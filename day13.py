@@ -20,6 +20,13 @@ def find_u(y, mod):
     return u
 
 
+def find_mod(ns, mods):
+    N = ns.prod()
+    ys = N / ns
+    us = np.array([find_u(y, n) for y, n in zip(ys, ns)])
+    return ((mods * ys * us).sum()) % N
+
+
 def find_answer_b(time_table):
     """Uses Chinese Remainder Theorem to find an N that satisfies given mods
 
