@@ -1,7 +1,6 @@
 from aocd import get_data, submit
 
 import itertools
-import math
 
 
 def count_neighbors(grid, orig_cell):
@@ -33,23 +32,6 @@ def iterate(grid, n_dims=3):
         elif neighbors == 3:
             new_grid.add(cell)
     return new_grid
-
-
-def print_grid_4(grid):
-    x, y, z, w = get_dims(grid, 4)
-    min_x, min_y, min_z, min_w = map(min, [x, y, z, w])
-    max_x, max_y, max_z, max_w = map(max, [x, y, z, w])
-    for l in range(min_w, max_w + 1):
-        print(f"w={l}")
-        for k in range(min_z, max_z + 1):
-            print(f"z={k}")
-            for i in range(min_x, max_x + 1):
-                row = ""
-                for j in range(min_y, max_y + 1):
-                    cell = (i, j, k, l)
-                    row = row + ("#" if cell in grid else ".")
-                print(row)
-            print()
 
 
 def make_grid(rows, n_dims):
