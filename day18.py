@@ -3,6 +3,8 @@ from operator import add, mul
 
 from aocd import get_data, submit
 
+operations = {"*": mul, "+": add}
+
 
 def find_matching_paren(equation):
     buffer = 0
@@ -13,9 +15,6 @@ def find_matching_paren(equation):
             buffer += 1
         if buffer == 0:
             return i
-
-
-operations = {"*": mul, "+": add}
 
 
 def parse_equation(equation):
