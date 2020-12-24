@@ -1,7 +1,5 @@
 from aocd import get_data, submit
 
-from collections import deque
-
 
 def get_dest_label(label, buff, mn, mx):
     while label in buff:
@@ -70,6 +68,7 @@ def find_answer_b(d, starting=1):
 
 
 if __name__ == "__main__":
+    start = time.time()
     data = list(map(int, get_data(day=23)))
 
     current = data[0]
@@ -79,11 +78,12 @@ if __name__ == "__main__":
     for _ in range(100):
         current = iterate(d1, current)
     answer_a = find_answer(d1)
-    submit(answer_a, part="a", day=23, year=2020)
+    # submit(answer_a, part="a", day=23, year=2020)
 
     current = data[0]
     for i in range(10_000_000):
         current = iterate(d2, current, mn=1, mx=1_000_000)
 
     answer_b = find_answer_b(d2)
-    submit(answer_b, part="b", day=23, year=2020)
+    # submit(answer_b, part="b", day=23, year=2020)
+    print(time.time() - start)
